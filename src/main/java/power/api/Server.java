@@ -15,12 +15,20 @@ import org.vertx.java.platform.Verticle;
  */
 public class Server extends Verticle {
 
-  public void start() {
-    vertx.createHttpServer().requestHandler(new Handler<HttpServerRequest>() {
-      public void handle(HttpServerRequest req) {
-        req.response().headers().set("Content-Type", "text/plain");
-        req.response().end("Hello World");
-      }
-    }).listen(Integer.parseInt(container.env().getOrDefault("PORT", "8080")), "0.0.0.0");
-  }
+    public final static int DEFAULT_PORT = 8080;
+    public final static String PORT = "PORT";
+    
+    public void start() {
+
+        int port = DEFAULT_PORT;
+        if (container.env().containsKey(PORT) && !container.env().get(PORT).isEmpty()) {
+            port = Integer.parseInt(container.env().getOrDefault("PORT", "_"));
+        }
+
+        vertx.createHttpServer()
+                .requestHandler(Routes.all())
+                .listen(port, "0.0.0.0");
+
+        container.logger().info("Webserver started, listening on port: " + port);
+    }
 }
