@@ -33,7 +33,7 @@ public class Assignment {
     }
     
     public static Assignment create(String id, String description, int timeAllowed) {
-        return create(id, description, timeAllowed, new Question[] {Question.areYouHome});
+        return create(id, description, timeAllowed, new Question[] {Question.atHomeRequired});
     }
     
     public Map<Keyword, Object> toMap() {
