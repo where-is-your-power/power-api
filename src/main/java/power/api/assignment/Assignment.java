@@ -19,21 +19,25 @@ public class Assignment {
     private final String id;
     private final String description;
     private final int timeAllowed;
+    private final int oldComparedToNew;
+    private final String powerType;
     private final Question[] questions;
 
-    private Assignment(String id, String description, int timeAllowed, Question[] questions) {
+    private Assignment(String id, String description, int timeAllowed, int oldComparedToNew, String powerType, Question[] questions) {
         this.id = id;
         this.description = description;
         this.timeAllowed = timeAllowed;
+        this.oldComparedToNew = oldComparedToNew;
+        this.powerType = powerType;
         this.questions = questions;
     }
     
-    public static Assignment create(String id, String description, int timeAllowed, Question[] questions) {
-        return new Assignment(id, description, timeAllowed, questions);
+    public static Assignment create(String id, String description, int timeAllowed, int oldComparedToNew, String powerType, Question[] questions) {
+        return new Assignment(id, description, timeAllowed, oldComparedToNew, powerType, questions);
     }
     
-    public static Assignment create(String id, String description, int timeAllowed) {
-        return create(id, description, timeAllowed, new Question[] {Question.atHomeRequired});
+    public static Assignment create(String id, String description, int timeAllowed, int oldComparedToNew, String powerType) {
+        return create(id, description, timeAllowed, oldComparedToNew, powerType, new Question[] {Question.atHomeRequired});
     }
     
     public Map<Keyword, Object> toMap() {
@@ -41,6 +45,8 @@ public class Assignment {
           put(key("id"), id);
           put(key("description"), description);
           put(key("allowedTime"), timeAllowed);
+          put(key("oldComparedToNew"), oldComparedToNew);
+          put(key("powerType"), powerType);
           put(key("questions"), questionsMap());
         }};
     }
