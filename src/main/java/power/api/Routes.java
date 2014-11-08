@@ -46,7 +46,7 @@ public class Routes {
     }
     
     public static void newAssignment(HttpServerRequest req) {
-       Assignment assignment = Assignments.random();
+       Assignment assignment = Assignments.random(req.params().get("user"));
        TJSON.end(req, assignment.toMap());
     }
     
