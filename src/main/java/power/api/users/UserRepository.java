@@ -5,7 +5,11 @@
  */
 package power.api.users;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -32,4 +36,14 @@ public class UserRepository {
         pointMap.put(user, 0);
     }
     
+    synchronized
+    public static UserInfo[] leaders(int topn) {
+        Comparator<Entry<String, Integer>> byPoints = (e1, e2) -> e1.getValue().compareTo(e2.getValue());
+        return pointMap.entrySet()
+                .stream()
+                .sorted(byPoints.reversed())
+                .limit(topn)
+                .map(e -> {return UserInfo.create(e.getKey(), e.getValue());})
+                .toArray(UserInfo[]::new);
+    }
 }

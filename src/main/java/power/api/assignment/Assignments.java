@@ -55,5 +55,9 @@ public class Assignments {
         int idx = generator.nextInt(all.length);
         return all[idx];
     }
+    
+    public static class NotSoRandom extends Random {
+        
+    }
 
 }

@@ -6,8 +6,10 @@
 package power.api;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
 import power.api.assignment.Assignment;
@@ -16,6 +18,7 @@ import power.api.assignment.SmallFacts;
 import power.api.transit.TJSON;
 import power.api.users.UserInfo;
 import power.api.users.UserRepository;
+import static power.api.utils.Untyper.untype;
 
 /**
  *
@@ -32,6 +35,7 @@ public class Routes {
         matcher.get("/user/:user", Routes::userInfo);
         matcher.get("/smallfact", Routes::smallFact);
         
+        matcher.get("/leaderboard/:topn", Routes::leaderboard);
         
         matcher.noMatch(Routes::whoops);
         return matcher;
@@ -70,6 +74,20 @@ public class Routes {
     public static void smallFact(HttpServerRequest req) {
         String fact = SmallFacts.random();
         textResponse(req, fact);
+    }
+    
+    public static void leaderboard(HttpServerRequest req) {
+        String user = req.params().get("topn");
+        int topn = 1;
+        try {
+            topn = Integer.parseInt(user);
+        }
+        catch (NumberFormatException ex) {
+            //
+        }
+        
+        UserInfo[] leaders = UserRepository.leaders(topn);
+        TJSON.end(req, Arrays.stream(leaders).map(l -> l.toMap()).toArray());
     }
     
     public static void textResponse(HttpServerRequest req, String response) {
