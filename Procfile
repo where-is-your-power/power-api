@@ -1,1 +1,0 @@
-web: mvn vertx:runMod
