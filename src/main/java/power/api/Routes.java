@@ -12,6 +12,7 @@ import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
 import power.api.assignment.Assignment;
 import power.api.assignment.Assignments;
+import power.api.assignment.SmallFacts;
 import power.api.transit.TJSON;
 import power.api.users.UserInfo;
 import power.api.users.UserRepository;
@@ -25,7 +26,12 @@ public class Routes {
         RouteMatcher matcher = new RouteMatcher();
         
         matcher.get("/assignment/new/:user", Routes::newAssignment);
+        matcher.get("/assignment/success/:user", Routes::successfulAssignment);
+        matcher.get("/assignment/fail/:user", Routes::failedAssignment);
+        
         matcher.get("/user/:user", Routes::userInfo);
+        matcher.get("/smallfact", Routes::smallFact);
+        
         
         matcher.noMatch(Routes::whoops);
         return matcher;
@@ -40,9 +46,30 @@ public class Routes {
        TJSON.end(req, assignment.toMap());
     }
     
+    public static void successfulAssignment(HttpServerRequest req) {
+        String user = req.params().get("user");
+        UserRepository.increasePoints(user);
+        UserInfo info = UserRepository.get(user);
+        
+        TJSON.end(req, info.toMap());
+    }
+    
+    public static void failedAssignment(HttpServerRequest req) {
+        String user = req.params().get("user");
+        UserRepository.reset(user);
+        UserInfo info = UserRepository.get(user);
+        
+        TJSON.end(req, info.toMap());
+    }
+    
     public static void userInfo(HttpServerRequest req) {
         UserInfo info = UserRepository.get(req.params().get("user"));
         TJSON.end(req, info.toMap());
+    }
+    
+    public static void smallFact(HttpServerRequest req) {
+        String fact = SmallFacts.random();
+        textResponse(req, fact);
     }
     
     public static void textResponse(HttpServerRequest req, String response) {
