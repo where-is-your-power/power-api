@@ -1,1 +1,1 @@
-web:    .maven/bin/mvn vertx:runMod
+web: mvn vertx:runMod
