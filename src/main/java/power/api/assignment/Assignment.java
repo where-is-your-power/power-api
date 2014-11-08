@@ -16,15 +16,13 @@ import java.util.Map;
  */
 public class Assignment {
     
-    private final String id;
     private final String description;
     private final int timeAllowed;
     private final int oldComparedToNew;
     private final String powerType;
     private final Question[] questions;
 
-    private Assignment(String id, String description, int timeAllowed, int oldComparedToNew, String powerType, Question[] questions) {
-        this.id = id;
+    private Assignment(String description, int timeAllowed, int oldComparedToNew, String powerType, Question[] questions) {
         this.description = description;
         this.timeAllowed = timeAllowed;
         this.oldComparedToNew = oldComparedToNew;
@@ -32,17 +30,36 @@ public class Assignment {
         this.questions = questions;
     }
     
-    public static Assignment create(String id, String description, int timeAllowed, int oldComparedToNew, String powerType, Question[] questions) {
-        return new Assignment(id, description, timeAllowed, oldComparedToNew, powerType, questions);
+    public static Assignment create(String description, int timeAllowed, int oldComparedToNew, String powerType, Question[] questions) {
+        return new Assignment(description, timeAllowed, oldComparedToNew, powerType, questions);
     }
     
-    public static Assignment create(String id, String description, int timeAllowed, int oldComparedToNew, String powerType) {
-        return create(id, description, timeAllowed, oldComparedToNew, powerType, new Question[] {Question.atHomeRequired});
+    public static Assignment create(String description, int timeAllowed, int oldComparedToNew, String powerType, String... questions) {
+        Question[] qObj = new Question[questions.length];
+        for (int i = 0; i < questions.length; ++i) {
+            
+            String yn = questions[i].substring(0,2);
+            String q = questions[i].substring(2);
+            if (yn.equals("Y:")) {
+                qObj[i] = Question.create(q, true);
+            }
+            else if (yn.equals("N:")) {
+                qObj[i] = Question.create(q, false);
+            }
+            else {
+                qObj[i] = Question.create(questions[i], true);
+            }
+        }
+        
+        return create(description, timeAllowed, oldComparedToNew, powerType, qObj);
+    }
+    
+    public static Assignment create(String description, int timeAllowed, int oldComparedToNew, String powerType) {
+        return create(description, timeAllowed, oldComparedToNew, powerType, new Question[] {Question.atHomeRequired});
     }
     
     public Map<Keyword, Object> toMap() {
         return new HashMap<Keyword, Object>() {{
-          put(key("id"), id);
           put(key("description"), description);
           put(key("allowedTime"), timeAllowed);
           put(key("oldComparedToNew"), oldComparedToNew);
