@@ -16,25 +16,26 @@ import java.util.Map;
  */
 public class Assignment {
     
-    private final String description;
+    private final String assignment;
+    private String description;
     private final int timeAllowed;
     private final int oldComparedToNew;
     private final String powerType;
     private final Question[] questions;
 
-    private Assignment(String description, int timeAllowed, int oldComparedToNew, String powerType, Question[] questions) {
-        this.description = description;
+    private Assignment(String assigment, int timeAllowed, int oldComparedToNew, String powerType, Question[] questions) {
+        this.assignment = assigment;
         this.timeAllowed = timeAllowed;
         this.oldComparedToNew = oldComparedToNew;
         this.powerType = powerType;
         this.questions = questions;
     }
     
-    public static Assignment create(String description, int timeAllowed, int oldComparedToNew, String powerType, Question[] questions) {
-        return new Assignment(description, timeAllowed, oldComparedToNew, powerType, questions);
+    public static Assignment create(String assignment, int timeAllowed, int oldComparedToNew, String powerType, Question[] questions) {
+        return new Assignment(assignment, timeAllowed, oldComparedToNew, powerType, questions);
     }
     
-    public static Assignment create(String description, int timeAllowed, int oldComparedToNew, String powerType, String... questions) {
+    public static Assignment create(String assigment, int timeAllowed, int oldComparedToNew, String powerType, String... questions) {
         Question[] qObj = new Question[questions.length];
         for (int i = 0; i < questions.length; ++i) {
             
@@ -51,15 +52,21 @@ public class Assignment {
             }
         }
         
-        return create(description, timeAllowed, oldComparedToNew, powerType, qObj);
+        return create(assigment, timeAllowed, oldComparedToNew, powerType, qObj);
     }
     
-    public static Assignment create(String description, int timeAllowed, int oldComparedToNew, String powerType) {
-        return create(description, timeAllowed, oldComparedToNew, powerType, new Question[] {Question.atHomeRequired});
+    public static Assignment create(String assignment, int timeAllowed, int oldComparedToNew, String powerType) {
+        return create(assignment, timeAllowed, oldComparedToNew, powerType, new Question[] {Question.atHomeRequired});
+    }
+    
+    public Assignment withDescription(String description) {
+        this.description = description;
+        return this;
     }
     
     public Map<Keyword, Object> toMap() {
         return new HashMap<Keyword, Object>() {{
+          put(key("assignment"), assignment);
           put(key("description"), description);
           put(key("allowedTime"), timeAllowed);
           put(key("oldComparedToNew"), oldComparedToNew);
