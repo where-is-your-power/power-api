@@ -13,6 +13,8 @@ import org.vertx.java.core.http.RouteMatcher;
 import power.api.assignment.Assignment;
 import power.api.assignment.Assignments;
 import power.api.transit.TJSON;
+import power.api.users.UserInfo;
+import power.api.users.UserRepository;
 
 /**
  *
@@ -23,8 +25,9 @@ public class Routes {
         RouteMatcher matcher = new RouteMatcher();
         
         matcher.get("/assignment/new/:user", Routes::newAssignment);
-        matcher.noMatch(Routes::whoops);
+        matcher.get("/user/:user", Routes::userInfo);
         
+        matcher.noMatch(Routes::whoops);
         return matcher;
     }
     
@@ -35,6 +38,11 @@ public class Routes {
     public static void newAssignment(HttpServerRequest req) {
        Assignment assignment = Assignments.random();
        TJSON.end(req, assignment.toMap());
+    }
+    
+    public static void userInfo(HttpServerRequest req) {
+        UserInfo info = UserRepository.get(req.params().get("user"));
+        TJSON.end(req, info.toMap());
     }
     
     public static void textResponse(HttpServerRequest req, String response) {
