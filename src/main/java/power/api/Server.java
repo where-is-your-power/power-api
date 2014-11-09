@@ -15,7 +15,7 @@ import org.vertx.java.platform.Verticle;
  */
 public class Server extends Verticle {
 
-    public final static int DEFAULT_PORT = 8080;
+    public final static int DEFAULT_PORT = 80;
     public final static String PORT = "PORT";
     
     public void start() {
