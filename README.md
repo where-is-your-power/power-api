@@ -7,11 +7,15 @@ Requirements
 
 Build
 =====================
+`
 mvn clean install
+`
 
-RUN
+Run
 =====================
+`
 export PORT=[portnum]
 vertx runzip target/power-api-[VERSION]-mod.zip
+`
 
 
