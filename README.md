@@ -1,4 +1,4 @@
-# POWER-API voor POWE-APP
+# power-api voor power-app
 
 Requirements
 =====================
